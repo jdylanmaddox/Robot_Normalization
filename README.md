@@ -36,7 +36,7 @@ simulate_run = 'yes' or 'no'
 
 # Output Files
 The function produces four files (3 csv and 1 python):
-1. basename_normalization_protocol.py
-2. basename_normalization.csv
-3. basename_overages.csv
-4. basename_too_low.csv
+1. base_name_normalization_protocol.py
+2. base_name_normalization.csv
+3. base_name_overages.csv
+4. base_name_too_low.csv
