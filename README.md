@@ -7,7 +7,7 @@ DNA concentration values (ng/µl) in a csv file. The function accepts two format
 2. A csv file containing DNA concentrations in plate format (i.e., 8x12 matrix). This is the same format produced by our Tecan plate reader. You simply need to deleted any min or max and standard values. The files plate_reader.csv and not_plate.csv are examples of the plate_reader and dna_column formats, respectively. 
 
 # Arguments
-The function has eight arguments that can be changed. 
+The function has eight arguments. 
 ```
 # Name of csv file containing concentration values
 dna_file = 'plate_reader.csv'
@@ -27,7 +27,7 @@ total_vol_min = 25.0
 # Final DNA concentration (ng/µl) of each sample
 final_con = 5.0
 
-# Voleum of DNA (µl) to add if DNA concentration is less than desired DNA concentration (i.e., final_con)
+# Volume of DNA (µl) to add if DNA concentration is less than desired DNA concentration (i.e., final_con)
 low_con_add = 10.0
 
 # Simulate protocol in OT-2
@@ -35,8 +35,13 @@ simulate_run = 'yes' or 'no'
 ```
 
 # Output Files
-The function produces four files (3 csv and 1 python):
+The function produces four files (1 python and 3 csv):
 1. base_name_normalization_protocol.py
+    - Can be imported directly to the OT-2 robot to run the normalizaiton protocol 
 2. base_name_normalization.csv
+    - Provides the normalization specifics of the protocol
 3. base_name_overages.csv
+    - Provides the samples that cannot be normalized in 100 µl (i.e., the DNA concentration is too high). With the information provide, however, you can normalize the samples in centrifuge tubes and add them to the normalization plate
 4. base_name_too_low.csv
+    - Provides the samples that cannot be normalized because the concentration is too low
+
