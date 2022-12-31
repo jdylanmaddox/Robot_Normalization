@@ -8,6 +8,6 @@ normalize(
     sample_min = 2,
     total_vol_min = 10,
     final_con = 5,
-    low_con_add = 10,
+    low_con_add = 0,
     simulate_run= 'yes'
 )
