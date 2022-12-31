@@ -1,10 +1,13 @@
 # Robot Normalization
 Creates normalization protocol for OT-2 Robot when given DNA concentrations
 
-# File Requirements
+# File Requirements from the User
 DNA concentration values (ng/µl) in a csv file. The function accepts two format types:
 1. A csv file containing a single column named dna_con that contains concentrations in plate order (i.e., A1, B1...G12, H12).
 2. A csv file containing DNA concentrations in plate format (i.e., 8x12 matrix). This is the same format produced by our Tecan plate reader. You simply need to deleted any min or max and standard values. The files plate_reader.csv and not_plate.csv are examples of the plate_reader and dna_column formats, respectively. 
+
+# File Requirements for the Function
+The function also requires two python files to run correctly. The first, DM-normalization.py, is the basic OT-2 Robot protocol for normalization. The second, create_normalization_protocol.py, calculates the volume of DNA and water to add to each well and changes the values in DM-normalization.py accordingly. It also produces the output files listed below. You should not alter either of these files. 
 
 # Arguments
 The function has eight arguments. 
@@ -45,3 +48,4 @@ The function produces four files (1 python and 3 csv):
 4. base_name_too_low.csv
     - Provides the samples that cannot be normalized because the concentration is too low
 
+# Running the Function
