@@ -1,6 +1,0 @@
-name: robot-environment
-channels:
-  - conda-forge
-dependencies:
-  - numpy
-  - pandas
