@@ -13,9 +13,10 @@ Requires DM-normalization.py
 # import pandas and numpy packages
 import pandas as pd
 import numpy as np
+import os
 
 def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_name = '2022_12_04_p1', sample_min = 2.0,
-              total_vol_min = 25, final_con = 10, low_con_add = 0, simulate_run = 'yes'):
+              total_vol_min = 25.0, final_con = 10.0, low_con_add = 0.0, simulate_run = 'yes'):
 
     if sample_min < 1.0:
         print('*** Sample minimum (i.e. sample_min) must be greater than 1.0 µl, but 2.0 µl is ideal')
@@ -129,12 +130,13 @@ def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_
     outOveragesName = base_name + '_overages.csv'
     outTooLowName = base_name + '_too_low.csv'
 
-    plate_con.to_csv(outPlateName, index=False)
-    overages.to_csv(outOveragesName, index=False)
-    too_low.to_csv(outTooLowName, index=False)
+    # write files to output directory
+    if not os.path.isdir('output_files'):
+        os.mkdir('output_files')
 
-    # remove blank values
-    # plate_con = np.where(plate_con['dna_ul'] == 0)
+    plate_con.to_csv('output_files/' + outPlateName, index=False)
+    overages.to_csv('output_files/' + outOveragesName, index=False)
+    too_low.to_csv('output_files/' + outTooLowName, index=False)
 
     # manipulations necessary for robot protocol
     plate_con['new_col'] = plate_con['dna_well'].map(str) + "," + plate_con['norm_well'].map(str) + "," + \
@@ -149,7 +151,7 @@ def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_
     newdata = filedata.replace('PASTE_DATA_HERE_MUST_END_WITH_QUOTATION_MARK', robot_vals)
     newdata = newdata.replace('Normalization from .csv', base_name + ' Normalization')
 
-    f = open(base_name + '_normalization_protocol.py', 'w')
+    f = open('output_files/' + base_name + '_normalization_protocol.py', 'w')
     f.write(newdata)
     f.close()
 
@@ -158,7 +160,7 @@ def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_
 
     # protocol name
     if simulate_run == 'yes':
-        protocol_name = base_name + '_normalization_protocol.py'
+        protocol_name = 'output_files/' + base_name + '_normalization_protocol.py'
         # read the file
         protocol_file = open(protocol_name)
         # simulate() the protocol, keeping the runlog
