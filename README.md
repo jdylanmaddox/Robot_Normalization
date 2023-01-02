@@ -46,6 +46,6 @@ The function produces four files (1 python and 3 csv):
     - Provides the samples that cannot be normalized because the concentration is too low
 
 # Using this Function
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jdylanmaddox/Robot_Normalization_Binder/HEAD?labpath=index.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jdylanmaddox/Robot_Normalization/HEAD?labpath=index.ipynb)
 
 The easiest way to run this function is to click the Binder button above. It will load a standalone Binder environment in which to run the function. You simply need to upload your DNA concentration files and change the arguments. 
