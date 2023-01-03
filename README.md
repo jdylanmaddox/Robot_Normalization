@@ -3,8 +3,8 @@ Creates normalization protocol for OT-2 Robot when given DNA concentrations
 
 # File Requirements
 DNA concentration values (ng/µl) in a csv file. The function accepts two format types:
-1. A csv file containing a single column named dna_con that contains concentrations in plate order (i.e., A1, B1...G12, H12).
-2. A csv file containing DNA concentrations in plate format (i.e., 8x12 matrix). This is the same format produced by our Tecan plate reader. You simply need to deleted any min or max and standard values. The files plate_reader.csv and not_plate.csv are examples of the plate_reader and dna_column formats, respectively. 
+1. A csv file containing a single column named dna_con that contains concentrations in plate order (i.e., A1, B1...G12, H12). See dna_column.csv for an example.
+2. A csv file containing DNA concentrations in plate format (i.e., 8x12 matrix). This is the same format produced by our Tecan plate reader. You simply need to deleted any min or max and standard values. See plate_reader.csv for an example.
 
 # Arguments
 The function has eight arguments. 
@@ -48,4 +48,4 @@ The function produces four files (1 python and 3 csv):
 # Using this Function
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jdylanmaddox/Robot_Normalization/HEAD?labpath=index.ipynb)
 
-The easiest way to run this function is to click the Binder button above. It will load a standalone Binder environment in which to run the function. You simply need to upload your DNA concentration files and change the arguments. 
+The easiest way to run this function is to click the Binder button above. It will load a standalone Binder environment in which you can run the function. You simply need to upload your DNA concentration files and change the arguments. If you're familar with python, you can download the required files (i.e., DM-normalization.py and create_normalization_protocol.py) and run the function as described in main.py.
