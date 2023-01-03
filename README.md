@@ -48,4 +48,6 @@ The function produces four files (1 python and 3 csv):
 # Using this Function
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jdylanmaddox/Robot_Normalization/HEAD?labpath=index.ipynb)
 
-The easiest way to run this function is to click the Binder button above. It will load a standalone Binder environment in which you can run the function. You simply need to upload your DNA concentration files and change the arguments. If you're familar with python, you can download the required files (i.e., DM-normalization.py and create_normalization_protocol.py) and run the function as described in main.py.
+The easiest way to run this function is to click the Binder button above. It will load a standalone Binder environment in which you can run the function. You simply need to upload your DNA concentration files and change the arguments. Note, the Binder environment can take several minutes to load. 
+
+If you're familar with python, you can simply download the required files (i.e., DM-normalization.py and create_normalization_protocol.py) and run the function as described in main.py.
