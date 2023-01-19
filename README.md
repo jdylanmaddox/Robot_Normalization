@@ -30,6 +30,9 @@ final_con = 5.0
 # Volume of DNA (µl) to add if DNA concentration is less than desired DNA concentration (i.e., final_con)
 low_con_add = 10.0
 
+# Select tip type
+tip_type = 'not_filtered' or 'filtered'
+
 # Simulate protocol in OT-2
 simulate_run = 'yes' or 'no'
 ```
