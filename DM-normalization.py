@@ -1,6 +1,6 @@
 def get_values(*names):
     import json
-    _all_values = json.loads("""{"input_csv":"source plate well,destination plate well,volume sample (µl),volume diluent (µl),\\nPASTE_DATA_HERE_MUST_END_WITH_QUOTATION_MARK","p20_type":"p20_single_gen2","p20_mount":"right","p300_type":"p300_single_gen2","p300_mount":"left","source_type":"nest_96_wellplate_100ul_pcr_full_skirt","dest_type":"nest_96_wellplate_100ul_pcr_full_skirt","reservoir_type":"nest_12_reservoir_15ml"}""")
+    _all_values = json.loads("""{"input_csv":"source plate well,destination plate well,volume sample (µl),volume diluent (µl),\\nPASTE_DATA_HERE_MUST_END_WITH_QUOTATION_MARK","p20_type":"p20_single_gen2","p20_mount":"right","p300_type":"p300_single_gen2","p300_mount":"left","source_type":"nest_96_wellplate_100ul_pcr_full_skirt","dest_type":"nest_96_wellplate_100ul_pcr_full_skirt","reservoir_type":"opentrons_10_tuberack_nest_4x50ml_6x15ml_conical"}""")
     return [_all_values[n] for n in names]
 
 
@@ -23,9 +23,7 @@ def run(ctx):
     # labware
     source_plate = ctx.load_labware(source_type, '8', 'source plate')
     destination_plate = ctx.load_labware(dest_type, '9', 'destination plate')
-    water = ctx.load_labware(
-        reservoir_type, '6',
-        'reservoir for water (position A1)').wells()[0].bottom(1)
+    water = ctx.load_labware(reservoir_type, '6')
 
     tip_type = 'tip_type_variable'
 
@@ -66,8 +64,8 @@ def run(ctx):
         pip = p300 if vol_w > 20 else p20
         if not pip.has_tip:
             pip.pick_up_tip()
-
-        pip.transfer(vol_w, water, d.bottom(2), new_tip='never')
+        pip.transfer(vol_w, water['A3'].bottom(2), d.bottom(2), new_tip='never')
+        pip.flow_rate.blow_out = 100  # change blow_out rate
         pip.blow_out(d.top(-2))
 
     for pip in [p20, p300]:
@@ -90,5 +88,6 @@ def run(ctx):
         if vol_s != 0:
             pip.pick_up_tip()
             pip.transfer(vol_s, s, d, new_tip='never')
+            pip.flow_rate.blow_out = 100  # change blow_out rate
             pip.blow_out(d.top(-2))
             pip.drop_tip()

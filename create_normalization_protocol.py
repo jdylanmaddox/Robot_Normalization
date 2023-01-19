@@ -79,10 +79,13 @@ def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_
     dna_con_max = np.max(plate_con['dna_con'])
     dna_con_avg = np.mean(plate_con['dna_con'])
     dna_con_avg = dna_con_avg.round(decimals=2)
+    reservoir_water_vol = np.sum(plate_con['water_ul'])
+    reservoir_water_vol = reservoir_water_vol.round(decimals=2)
 
     print('---> Minimum DNA Concentration = ' + str(dna_con_min))
     print('---> Maximum DNA Concentration = ' + str(dna_con_max))
     print('---> Average DNA Concentration = ' + str(dna_con_avg))
+    print('---> Total Water Needed for Reservoir = ' + str(reservoir_water_vol) + ' µl')
     print('')
 
     # create new dataframe for samples with too much liquid (i.e., won't fit into wells)
