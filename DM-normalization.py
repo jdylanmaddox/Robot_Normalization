@@ -26,18 +26,24 @@ def run(ctx):
     water = ctx.load_labware(
         reservoir_type, '6',
         'reservoir for water (position A1)').wells()[0].bottom(1)
-    tiprack20 = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20ul tiprack')
-        for slot in ['11','5']
-    ]
-    tiprack300 = [
-        ctx.load_labware('opentrons_96_tiprack_300ul', slot, '300ul tiprack')
-        for slot in ['10']
-    ]
 
-    # pipettes
-    p20 = ctx.load_instrument(p20_type, p20_mount, tip_racks=tiprack20)
-    p300 = ctx.load_instrument(p300_type, p300_mount, tip_racks=tiprack300)
+    tip_type = 'tip_type_variable'
+
+    if tip_type == 'not_filtered':
+        tiprack20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20ul tiprack')
+                    for slot in ['11','5']]
+        tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot, '300ul tiprack')
+                    for slot in ['10']]
+        p20 = ctx.load_instrument(p20_type, p20_mount, tip_racks=tiprack20)
+        p300 = ctx.load_instrument(p300_type, p300_mount, tip_racks=tiprack300)
+
+    elif tip_type == 'filtered':
+        tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot, '20ul filtered tiprack')
+                     for slot in ['11', '5']]
+        tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot, '200ul filtered tiprack')
+                      for slot in ['10']]
+        p20 = ctx.load_instrument(p20_type, p20_mount, tip_racks=tiprack20)
+        p300 = ctx.load_instrument(p300_type, p300_mount, tip_racks=tiprack300)
 
     # parse
     data = [

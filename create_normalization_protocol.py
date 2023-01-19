@@ -16,7 +16,7 @@ import numpy as np
 import os
 
 def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_name = '2022_12_04_p1', sample_min = 2.0,
-              total_vol_min = 25.0, final_con = 10.0, low_con_add = 0.0, simulate_run = 'yes'):
+              total_vol_min = 25.0, final_con = 10.0, low_con_add = 0.0, tip_type = 'not_filtered', simulate_run = 'yes'):
 
     if sample_min < 1.0:
         print('*** Sample minimum (i.e. sample_min) must be greater than 1.0 µl, but 2.0 µl is ideal')
@@ -150,6 +150,8 @@ def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_
 
     newdata = filedata.replace('PASTE_DATA_HERE_MUST_END_WITH_QUOTATION_MARK', robot_vals)
     newdata = newdata.replace('Normalization from .csv', base_name + ' Normalization')
+    newdata = newdata.replace('tip_type_variable', tip_type)
+
 
     f = open('output_files/' + base_name + '_normalization_protocol.py', 'w')
     f.write(newdata)
