@@ -1,3 +1,6 @@
+import math
+
+
 def get_values(*names):
     import json
     _all_values = json.loads("""{"input_csv":"source plate well,destination plate well,volume sample (µl),volume diluent (µl),\\nPASTE_DATA_HERE_MUST_END_WITH_QUOTATION_MARK","p20_type":"p20_single_gen2","p20_mount":"right","p300_type":"p300_single_gen2","p300_mount":"left","source_type":"nest_96_wellplate_100ul_pcr_full_skirt","dest_type":"nest_96_wellplate_100ul_pcr_full_skirt","reservoir_type":"opentrons_6_tuberack_nest_50ml_conical"}""")
@@ -49,6 +52,18 @@ def run(ctx):
         for line in input_csv.splitlines()[1:]
         if line and line.split(',')[0]]
 
+    # calculating water height in 5 mL tube
+    # add calculated water volume from create_normalization_protocol.py
+    # must calculate height above 5 mL and add 17 mm because the tube has a v-bottom
+    reservoir_water_vol = ADD_CALCULATED_WATER_VOLUME
+    int_vol = reservoir_water_vol
+    starting_ht = (int_vol - 5000) / (math.pi * (13.25 ** 2))
+    tip_ht = 17 + round(starting_ht, 2) - 10
+    print('Starting tip height (mm) = ' + str(round(tip_ht, 2)))
+
+    # insure user has added the correct amount of water to 50 mL tube
+    ctx.pause('Did you add ' + str(int_vol) + ' µl of water to the 50 mL tube? It needs to be fairly accurate. The pipette tip will start at ' + str(round(tip_ht, 2)) + ' mm from the bottom of the tube. For reference 5 mL is 17 mm from the bottom. *** DO NOT simply fill the tube to 50 mL as the pipette mechanism will get wet and possibly break. *** ')
+
     # perform normalization
     for line in data:
         s, d, vol_s, vol_w = line[:4]
@@ -64,9 +79,15 @@ def run(ctx):
         pip = p300 if vol_w > 20 else p20
         if not pip.has_tip:
             pip.pick_up_tip()
-        pip.transfer(vol_w, water['A1'].bottom(2), d.bottom(2), new_tip='never')
+        pip.transfer(vol_w, water['A1'].bottom(tip_ht), d.bottom(2), new_tip='never')
         pip.flow_rate.blow_out = 100  # change blow_out rate
         pip.blow_out(d.top(-2))
+
+        # track water height in 50 mL tube
+        used_ht = vol_w / (math.pi * (13.25 ** 2))
+        tip_ht += used_ht
+        if tip_ht < 15:
+            tip_ht = 10
 
     for pip in [p20, p300]:
         if pip.has_tip:
@@ -88,6 +109,6 @@ def run(ctx):
         if vol_s != 0:
             pip.pick_up_tip()
             pip.transfer(vol_s, s, d, new_tip='never')
-            pip.flow_rate.blow_out = 100  # change blow_out rate
+            pip.flow_rate.blow_out = 50  # change blow_out rate
             pip.blow_out(d.top(-2))
             pip.drop_tip()
