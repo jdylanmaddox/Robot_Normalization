@@ -15,6 +15,7 @@ import pandas as pd
 import numpy as np
 import os
 
+
 def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_name = '2022_12_04_p1', sample_min = 2.0,
               total_vol_min = 25.0, final_con = 10.0, low_con_add = 0.0, tip_type = 'not_filtered', simulate_run = 'yes'):
 
@@ -55,18 +56,18 @@ def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_
     plate_con = plate_con.round(decimals=2)
 
     # create well locations
-    wells =(    'A1','B1','C1','D1','E1','F1','G1','H1',
-                'A2','B2','C2','D2','E2','F2','G2','H2',
-                'A3','B3','C3','D3','E3','F3','G3','H3',
-                'A4','B4','C4','D4','E4','F4','G4','H4',
-                'A5','B5','C5','D5','E5','F5','G5','H5',
-                'A6','B6','C6','D6','E6','F6','G6','H6',
-                'A7','B7','C7','D7','E7','F7','G7','H7',
-                'A8','B8','C8','D8','E8','F8','G8','H8',
-                'A9','B9','C9','D9','E9','F9','G9','H9',
-                'A10','B10','C10','D10','E10','F10','G10','H10',
-                'A11','B11','C11','D11','E11','F11','G11','H11',
-                'A12','B12','C12','D12','E12','F12','G12','H12')
+    wells = ('A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1',
+             'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
+             'A3', 'B3', 'C3', 'D3', 'E3', 'F3', 'G3', 'H3',
+             'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4', 'H4',
+             'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5', 'H5',
+             'A6', 'B6', 'C6', 'D6', 'E6', 'F6', 'G6', 'H6',
+             'A7', 'B7', 'C7', 'D7', 'E7', 'F7', 'G7', 'H7',
+             'A8', 'B8', 'C8', 'D8', 'E8', 'F8', 'G8', 'H8',
+             'A9', 'B9', 'C9', 'D9', 'E9', 'F9', 'G9', 'H9',
+             'A10', 'B10', 'C10', 'D10', 'E10', 'F10', 'G10', 'H10',
+             'A11', 'B11', 'C11', 'D11', 'E11', 'F11', 'G11', 'H11',
+             'A12', 'B12', 'C12', 'D12', 'E12', 'F12', 'G12', 'H12')
 
     plate_con.insert(loc=0, column='dna_well', value=wells)
     plate_con.insert(loc=1, column='norm_well', value=wells)
@@ -79,14 +80,6 @@ def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_
     dna_con_max = np.max(plate_con['dna_con'])
     dna_con_avg = np.mean(plate_con['dna_con'])
     dna_con_avg = dna_con_avg.round(decimals=2)
-    reservoir_water_vol = np.sum(plate_con['water_ul'])
-    reservoir_water_vol = reservoir_water_vol.round(decimals=2)
-
-    print('---> Minimum DNA Concentration = ' + str(dna_con_min))
-    print('---> Maximum DNA Concentration = ' + str(dna_con_max))
-    print('---> Average DNA Concentration = ' + str(dna_con_avg))
-    print('---> Total Water Needed for Reservoir = ' + str(reservoir_water_vol) + ' µl')
-    print('')
 
     # create new dataframe for samples with too much liquid (i.e., won't fit into wells)
     overages = plate_con[plate_con['dna_ul'] + plate_con['water_ul'] >= 100]
@@ -107,7 +100,7 @@ def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_
     else:
         print('*** ' + str(too_low_num) + ' samples have too low concentrations ***')
         if low_con_add > 0:
-            print('*** However, you choose to add ' + str(low_con_add) + ' µl from each of these samples')
+            print('*** However, you chose to add ' + str(low_con_add) + ' µl from each of these samples')
             print('---- See too_low.csv file for specifics ----')
             print(too_low)
         else:
@@ -127,6 +120,18 @@ def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_
 
     # however, when the low_con_add variable > 0, add dna for samples with too low concentrations and cross your fingers
     plate_con['dna_ul'] = np.where(plate_con['dna_con'] < final_con, low_con_add, plate_con['dna_ul'])
+
+    # calculate water to put in 50 mL tube
+    reservoir_water_vol = np.sum(plate_con['water_ul'])
+    reservoir_water_vol = reservoir_water_vol.round(decimals=2) + 5000  # add extra 5 mL of water
+
+    # print basic stats
+    print('---> Minimum DNA Concentration = ' + str(dna_con_min))
+    print('---> Maximum DNA Concentration = ' + str(dna_con_max))
+    print('---> Average DNA Concentration = ' + str(dna_con_avg))
+    print('---> Total Water Needed for Reservoir = ' + str(reservoir_water_vol) + ' µl')
+    print('---> The Above Includes an Extra 5 mL of Water')
+    print('')
 
     # add base_name to output file names
     outPlateName = base_name + '_normalization.csv'
@@ -154,7 +159,7 @@ def normalize(dna_file = 'plate_reader.csv', data_format = 'plate_reader', base_
     newdata = filedata.replace('PASTE_DATA_HERE_MUST_END_WITH_QUOTATION_MARK', robot_vals)
     newdata = newdata.replace('Normalization from .csv', base_name + ' Normalization')
     newdata = newdata.replace('tip_type_variable', tip_type)
-
+    newdata = newdata.replace('ADD_CALCULATED_WATER_VOLUME', str(reservoir_water_vol))
 
     f = open('output_files/' + base_name + '_normalization_protocol.py', 'w')
     f.write(newdata)
